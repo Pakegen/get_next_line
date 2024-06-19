@@ -3,12 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: quenalla <quenalla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qacjl <qacjl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:57:56 by quenalla          #+#    #+#             */
-/*   Updated: 2024/06/18 16:01:02 by quenalla         ###   ########.fr       */
+/*   Updated: 2024/06/19 16:24:16 by qacjl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 
+char	*get_next_line(int fd)
+{
+	char *str;
+
+
+	str = open(fd, O_RDWR);
+	
+}
