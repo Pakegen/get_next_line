@@ -3,13 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: quenalla <quenalla@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qacjl <qacjl@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:57:54 by quenalla          #+#    #+#             */
-/*   Updated: 2024/06/18 16:01:24 by quenalla         ###   ########.fr       */
+/*   Updated: 2024/06/21 11:34:01 by qacjl            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 
-
+char	ft_strchr(char *str, int c)
+{
+	while(*str != c)
+	{
+		if(*str == '\0')
+			return (NULL);
+		str++;
+	}
+	return (str)
+}
