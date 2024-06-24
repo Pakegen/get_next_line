@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qacjl <qacjl@student.42.fr>                +#+  +:+       +#+        */
+/*   By: quenalla <quenalla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:56:51 by quenalla          #+#    #+#             */
-/*   Updated: 2024/06/21 11:34:37 by qacjl            ###   ########.fr       */
+/*   Updated: 2024/06/24 08:51:19 by quenalla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,15 +24,16 @@
 
 
 #ifndef MAX_FD
-# define MAX_FD 256
+# define MAX_FD 1024
 #endif
 
 char	*get_next_line(int fd);
 
-char	ft_strchr(char *str, int c);
+char	*ft_strchr(char *str, int c);
 
-/*strjoin
-peut etre strnew
-*/
+char	*ft_strjoin(char *s1, char *s2);
+
+char	*ft_strdup(char *src);
+
 
 #endif
