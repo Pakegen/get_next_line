@@ -6,52 +6,77 @@
 /*   By: quenalla <quenalla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:57:56 by quenalla          #+#    #+#             */
-/*   Updated: 2024/06/24 10:38:51 by quenalla         ###   ########.fr       */
+/*   Updated: 2024/07/03 10:27:07 by quenalla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 
-char	*join_line(int return_line, char *buffer)
+static char	*ft_set_line(char *line_buffer)
 {
-	
+	char	*res;
+	ssize_t	i;
+
+	i = 0;
+	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
+		i++;
+	if (line_buffer[i] == 0 || line_buffer[1] == 0)
+		return (NULL);
+	res = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
+	if (!(res))
+	{
+		free(res);
+		res = NULL;
+	}
+	line_buffer[i + 1] = '\0';
+	return (res);
 }
 
-char	*line(int fd, char **buffer, char *str)
+static char	*ft_line(int fd, char *res, char *buffer)
 {
 	ssize_t	byte_read;
 	char	*tmp;
-	char	*return_line;
 
-	byte_read = 0;
-	tmp = NULL;
-	return_line = ft_strchr(str, '\n');
-	while (return_line == NULL)
+	byte_read = 1;
+	while (byte_read > 0)
 	{
-		byte_read = read(fd, str, BUFFER_SIZE);
-		if (byte_read <= 0)
-			return (strjoin(*buffer, str));
-		str[byte_read] = 0;
-		tmp = ft_strjoin(*buffer, str);
-		ft_free(buffer);
-		*buffer = tmp;
-		return_line = ft_strchr(*buffer, '\n');
+		byte_read = read(fd, buffer, BUFFER_SIZE);
+		if (byte_read == -1)
+		{
+			free(res);
+			return (NULL);
+		}
+		else if (byte_read == 0)
+			break ;
+		buffer[byte_read] = '\0';
+		if (!(res))
+			res = ft_strdup("");
+		tmp = res;
+		res = ft_strjoin(tmp, buffer);
+		free(tmp);
+		tmp = NULL;
+		if (ft_strchr(buffer, '\n'))
+			break ;
 	}
-	return (join_line(return_line - *buffer + 1, buffer));
+	return (res);
 }
 
 char	*get_next_line(int fd)
 {
-	static char		*buffer[MAX_FD];
+	static char		*res;
 	char			*str;
-	char			*res;
+	char			*buffer;
 
 	if (fd < 0 || MAX_FD < fd || BUFFER_SIZE <= 0)
 		return (NULL);
-	str = (char *)malloc(BUFFER_SIZE + 1);
-	if (str == NULL)
+	buffer = (char *)malloc(BUFFER_SIZE + 1);
+	if (!(buffer))
 		return (NULL);
-	if (!buffer[fd])
-		buffer[fd] = strdup("");
-	res = line(fd, &buffer[fd], str);
+	str = ft_line(fd, res, buffer);
+	free(buffer);
+	buffer = NULL;
+	if (!(str))
+		return (NULL);
+	res = ft_set_line(ft_line);
+	return (str);
 }
