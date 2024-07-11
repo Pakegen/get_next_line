@@ -5,78 +5,93 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: quenalla <quenalla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/06/18 15:57:56 by quenalla          #+#    #+#             */
-/*   Updated: 2024/07/03 10:27:07 by quenalla         ###   ########.fr       */
+/*   Created: 2024/07/08 20:39:06 by qacjl             #+#    #+#             */
+/*   Updated: 2024/07/11 13:15:25 by quenalla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 
-static char	*ft_set_line(char *line_buffer)
+void	ft_free(char **buffer)
 {
+	if (*buffer != NULL)
+	{
+		free(*buffer);
+		buffer = NULL;
+	}
+}
+
+char	*ft_set_ligne(char **buffer)
+{
+	char	*tmp;
 	char	*res;
-	ssize_t	i;
+	int		i;
 
 	i = 0;
-	while (line_buffer[i] != '\n' && line_buffer[i] != '\0')
+	while (*buffer[i] && *buffer[i] != '\n')
 		i++;
-	if (line_buffer[i] == 0 || line_buffer[1] == 0)
-		return (NULL);
-	res = ft_substr(line_buffer, i + 1, ft_strlen(line_buffer) - i);
-	if (!(res))
+	if (i == 0)
 	{
-		free(res);
-		res = NULL;
+		if (**buffer == '\0')
+		{
+			free(*buffer);
+			*buffer = NULL;
+			return (NULL);
+		}
+		res = *buffer;
+		*buffer = NULL;
+		return (res);
 	}
-	line_buffer[i + 1] = '\0';
+	tmp = ft_substr(*buffer, i + 1, BUFFER_SIZE);
+	res = *buffer;
+	res[i + 1] = 0;
+	*buffer = tmp;
 	return (res);
 }
 
-static char	*ft_line(int fd, char *res, char *buffer)
+char	*ft_ligne_lue(int fd, char **buffer, char *str)
 {
-	ssize_t	byte_read;
 	char	*tmp;
+	char	*ligne;
+	ssize_t	byte_read;
 
+	ligne = ft_strchr(*buffer, '\n');
 	byte_read = 1;
-	while (byte_read > 0)
+	tmp = NULL;
+	while (ligne == NULL)
 	{
-		byte_read = read(fd, buffer, BUFFER_SIZE);
+		byte_read = read(fd, str, BUFFER_SIZE);
 		if (byte_read == -1)
 		{
-			free(res);
+			free(buffer);
 			return (NULL);
 		}
 		else if (byte_read == 0)
-			break ;
-		buffer[byte_read] = '\0';
-		if (!(res))
-			res = ft_strdup("");
-		tmp = res;
-		res = ft_strjoin(tmp, buffer);
-		free(tmp);
-		tmp = NULL;
-		if (ft_strchr(buffer, '\n'))
-			break ;
+			return (ft_set_ligne(buffer));
+		str[byte_read] = 0;
+		tmp = ft_strjoin(*buffer, str);
+		ft_free(buffer);
+		*buffer = tmp;
+		ligne = ft_strchr(*buffer, '\n');
 	}
-	return (res);
+	return (ft_set_ligne(buffer));
 }
 
 char	*get_next_line(int fd)
 {
-	static char		*res;
-	char			*str;
-	char			*buffer;
+	static char	*buffer[LIMIT_FD];
+	char		*str;
+	char		*res;
 
-	if (fd < 0 || MAX_FD < fd || BUFFER_SIZE <= 0)
+	if (fd > LIMIT_FD || BUFFER_SIZE <= 0 || fd < 0)
 		return (NULL);
-	buffer = (char *)malloc(BUFFER_SIZE + 1);
-	if (!(buffer))
+	str = (char *)malloc(BUFFER_SIZE + 1);
+	if (!str)
 		return (NULL);
-	str = ft_line(fd, res, buffer);
-	free(buffer);
-	buffer = NULL;
-	if (!(str))
-		return (NULL);
-	res = ft_set_line(ft_line);
-	return (str);
+	if (!buffer[fd])
+		buffer[fd] = ft_strdup("");
+	res = ft_ligne_lue(fd, &buffer[fd], str);
+	free(str);
+	str = NULL;
+	return (res);
 }

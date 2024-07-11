@@ -6,13 +6,13 @@
 /*   By: quenalla <quenalla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/06/18 15:57:54 by quenalla          #+#    #+#             */
-/*   Updated: 2024/07/03 10:23:52 by quenalla         ###   ########.fr       */
+/*   Updated: 2024/07/11 13:12:51 by quenalla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include"get_next_line.h"
 
-static size_t	ft_strlen(char *str)
+size_t	ft_strlen(const char *str)
 {
 	size_t	i;
 
@@ -22,7 +22,7 @@ static size_t	ft_strlen(char *str)
 	return (i);
 }
 
-static char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
 	char	*str;
 
@@ -36,14 +36,14 @@ static char	*ft_strchr(const char *s, int c)
 	return (str);
 }
 
-static char	*ft_strdup(char const *s)
+char	*ft_strdup(const char *s)
 {
 	size_t	i;
 	char	*dest;
 
 	i = 0;
-	dest = (char *)malloc(ft_strlen(s) + 1);
-	if (!(s))
+	dest = (char *)malloc(ft_strlen((char *)s) + 1);
+	if (!(dest))
 		return (NULL);
 	while (s[i])
 	{
@@ -54,7 +54,7 @@ static char	*ft_strdup(char const *s)
 	return (dest);
 }
 
-static char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	size_t	len_s1;
 	size_t	len_s2;
@@ -83,7 +83,7 @@ static char	*ft_strjoin(char const *s1, char const *s2)
 	return (dest);
 }
 
-static char	*ft_substr(char const *s, unsigned start, size_t len)
+char	*ft_substr(char const *s, unsigned start, size_t len)
 {
 	size_t	len_src;
 	size_t	i;
